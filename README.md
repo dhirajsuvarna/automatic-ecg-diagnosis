@@ -1,3 +1,7 @@
+# My comments 
+- forked from  https://github.com/antonior92/automatic-ecg-diagnosis.git
+- Will be using to work on a different dataset 
+
 # Automatic ECG diagnosis using a deep neural network
 Scripts and modules for training and testing deep neural networks for ECG automatic classification.
 Companion code to the paper "Automatic diagnosis of the 12-lead ECG using a deep neural network".
