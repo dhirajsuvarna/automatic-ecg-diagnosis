@@ -3,21 +3,32 @@ from tensorflow.keras.callbacks import (ModelCheckpoint, TensorBoard, ReduceLROn
                                         CSVLogger, EarlyStopping)
 from model import get_model
 import argparse
-from datasets import ECGSequence
+from datasets import ECGSequence, PublicECGSequence
 
 if __name__ == "__main__":
     # Get data and train
     parser = argparse.ArgumentParser(description='Train neural network.')
-    parser.add_argument('path_to_hdf5', type=str,
-                        help='path to hdf5 file containing tracings')
-    parser.add_argument('path_to_csv', type=str,
-                        help='path to csv file containing annotations')
-    parser.add_argument('--val_split', type=float, default=0.02,
+    # parser.add_argument('path_to_hdf5', type=str,
+    #                     help='path to hdf5 file containing tracings')
+    # parser.add_argument('path_to_csv', type=str,
+    #                     help='path to csv file containing annotations')
+    # parser.add_argument('--val_split', type=float, default=0.02,
+    #                     help='number between 0 and 1 determining how much of'
+    #                          ' the data is to be used for validation. The remaining '
+    #                          'is used for validation. Default: 0.02')
+    # parser.add_argument('--dataset_name', type=str, default='tracings',
+    #                     help='name of the hdf5 dataset containing tracings')
+
+    parser = argparse.ArgumentParser(description='Train neural network.')
+    parser.add_argument('--path_to_train', type=str, help='path to csv file containing training data')
+    parser.add_argument('--path_to_ecg', type=str, help='path to folder containing csv of ecg')
+    parser.add_argument('--val_split', type=float, default=0.2,
                         help='number between 0 and 1 determining how much of'
                              ' the data is to be used for validation. The remaining '
-                             'is used for validation. Default: 0.02')
-    parser.add_argument('--dataset_name', type=str, default='tracings',
-                        help='name of the hdf5 dataset containing tracings')
+                             'is used for validation. Default: 0.2')
+    # parser.add_argument('--dataset_name', type=str, default='tracings',
+    #                     help='name of the hdf5 dataset containing tracings')
+
     args = parser.parse_args()
     # Optimization settings
     loss = 'binary_crossentropy'
@@ -31,8 +42,11 @@ if __name__ == "__main__":
                  EarlyStopping(patience=9,  # Patience should be larger than the one in ReduceLROnPlateau
                                min_delta=0.00001)]
 
-    train_seq, valid_seq = ECGSequence.get_train_and_val(
-        args.path_to_hdf5, args.dataset_name, args.path_to_csv, batch_size, args.val_split)
+    # train_seq, valid_seq = ECGSequence.get_train_and_val(
+    #     args.path_to_hdf5, args.dataset_name, args.path_to_csv, batch_size, args.val_split)
+
+    train_seq, valid_seq = PublicECGSequence.get_train_and_val(
+        args.path_to_train, args.path_to_ecg, batch_size, args.val_split)
 
     # If you are continuing an interrupted section, uncomment line bellow:
     #   model = keras.models.load_model(PATH_TO_PREV_MODEL, compile=False)

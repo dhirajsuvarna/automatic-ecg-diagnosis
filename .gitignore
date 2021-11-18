@@ -130,3 +130,7 @@ dmypy.json
 
 # Avoid large files
 *.hdf5
+
+*.pb
+logs/
+.vscode/
